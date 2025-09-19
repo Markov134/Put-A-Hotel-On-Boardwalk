@@ -1,17 +1,28 @@
 //
 // Created by Steph on 9/16/2025.
 //
-#include <iostream>
-#include <string>
-
 #ifndef MONOPOLYBOARD_H
 #define MONOPOLYBOARD_H
-
+#include <iostream>
+#include <string>
+#include <cstdlib>
 
 template <typename T>
 class CircularlyLinkedList {
   private:
     // nested Node class omitted here; identical to the SinglyLinkedList Node class
+    class RollDice {
+    private:
+        int dice1 = 0;
+        int dice2 = 0;
+    public:
+        int roll() {
+            dice1 = (rand() % 6) + 1;
+            dice2 = (rand() % 6) + 1;
+            return dice1 + dice2;
+        }
+    };
+
     class Node {
         public:
         T elem;
@@ -24,7 +35,7 @@ class CircularlyLinkedList {
     Node* tail{nullptr};                                 // the node storing last element of the list
 
   public:
-    CircularlyLinkedList() {}                            // Constructs an empty list
+    CircularlyLinkedList() {} // Constructs an empty list
 
     // ---------- access functions ----------
     int size() const { return sz; }                      // Returns the number of elements stored
@@ -65,9 +76,13 @@ class CircularlyLinkedList {
     }
 
     // Rotates the first element to the back of the list
-    void rotate() {
+    void step() {
         if (tail != nullptr)                             // if empty, do nothing
             tail = tail->next;                           // otherwise, the old head becomes the new tail
+    }
+
+    void currentNode() {
+        std::cout << tail->elem << std::endl;
     }
 
     void print() {
@@ -82,6 +97,24 @@ class CircularlyLinkedList {
             current = current->next;
         } while (current != tail->next);
     }
+
+    void roll() {
+        RollDice dice;
+        int steps = dice.roll();
+        std::cout << steps << std::endl;
+
+        for (int i = 0; i < steps; i++) {
+            step();
+        }
+    }
+
+    void clear() {
+        while (sz > 0 ) {
+            pop_front();
+        }
+    }
+
+    ~CircularlyLinkedList() { clear(); }
 };
 
 
